@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# assignment pdf
+SDSU_CS514_Final_Database_Product_Project-final-v2.pdf
+
+# python bytecode
+__pycache__/
