@@ -1,10 +1,27 @@
 "use client"
 
-import { useState } from "react";
+import { CoursesResponse } from "@/src/lib/types";
+import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { UUID } from "crypto";
 
-export default function LandingPage() {
-    const [classCode, setClassCode] = useState()
-    const [courseNum, setCourseNum] = useState();
+export default function LandingPage({courses}: {courses: CoursesResponse}) {
+    const [coursePrefix, setCoursePrefix] = useState<string | null>(null);
+    const [courseUUID, setCourseUUID] = useState<UUID | null>(null);
+    const router = useRouter();
+    const allCoursePrefix = useMemo(() => {
+        const temp : string[] = []
+        for(const [key, value] of Object.entries(courses)){
+            temp.push(key)
+        }
+        return temp
+    }, [courses])
+    const allCourseNames = useMemo(() => {
+        if(!coursePrefix){
+            return;
+        }
+        return courses[coursePrefix];
+    }, [coursePrefix, courses])
     return (
         <div className="flex relative w-full h-screen items-center justify-center bg-(--bg-primary)">
             {/** the background glow on the main screen */}
@@ -33,11 +50,16 @@ export default function LandingPage() {
              * only to showcase the UI when data exists
              */}
 
-                        <select className="h-12 w-full rounded-lg border border-(--border-strong) bg-(--bg-tertiary) px-3 text-sm text-(--text-secondary) outline-none">
+                        <select 
+                        value = {coursePrefix ?? ""}
+                        onChange={(e) => {
+                          setCoursePrefix(e.target.value);
+                        }}
+                        className="h-12 w-full rounded-lg border border-(--border-strong) bg-(--bg-tertiary) px-3 text-sm text-(--text-secondary) outline-none">
                             <option value="" disabled>
                                 Select a class code
                             </option>
-                            {["A E", "AFRAS", "CS", "CHEM", "BIO"].map((i) => (
+                            {allCoursePrefix.map((i) => (
                                 <option
                                     key={i}
                                     className="w-full p-4 last:border-0 border-(--border)">
@@ -48,7 +70,8 @@ export default function LandingPage() {
                     </div>
 
                     {/** Course number dropdown */}
-                    <div className="flex flex-col gap-2">
+                    <div 
+                    className="flex flex-col gap-2">
                         <p className="font-light">
                             Course number
                         </p>
@@ -56,28 +79,45 @@ export default function LandingPage() {
              * only to showcase the UI when data exists
              * this one is more confusing to show in temp but itll be in response to what class prefix is chosen meaning its null 
              */}
-
-                        <select className="h-12 text-(--text-secondary) w-full rounded-lg border border-(--border-strong) bg-(--bg-tertiary) px-3 text-sm outline-none">
+                    
+                        <select 
+                        onChange={(e) => {
+                            setCourseUUID(e.target.value as UUID);
+                          }}
+                        disabled = {coursePrefix === null}
+                        className={`h-12 text-(--text-secondary) w-full rounded-lg border border-(--border-strong) bg-(--bg-tertiary) px-3 text-sm outline-none ${!courseUUID && "cursor-not-allowed"}`}>
                             <option value="" disabled>
                                 Select a course number
                             </option>
-                            {["A E 123", "A E 125", "A E 156"].map((i) => (
+                            <option value = "">
+                            </option>
+                            {allCourseNames && allCourseNames.map((c) => (
                                 <option
-                                    key={i}
+                                    value = {c.id}
+                                    key={c.id}
                                     className="w-full p-4 last:border-0 border-(--border)">
-                                    {i}
+                                    {c.full_code} : {c.course_name}
                                 </option>
                             ))}
                         </select>
                     </div>
-                    <button className="w-full bg-(--accent) text-center font-bold hover:bg-(--accent-hover) p-3 rounded-md cursor-pointer">
+                    <button 
+                    onClick={() => {
+                        if(!coursePrefix){
+                            return
+                        }
+                        if(coursePrefix && courseUUID){
+                            return router.push(`/courses/${courseUUID}`)
+                        }
+                        if(!courseUUID){
+                            return router.push(`/courses?course_prefix=${coursePrefix}`)
+                        }
+                    }}
+                    className="w-full bg-(--accent) text-center font-bold hover:bg-(--accent-hover) p-3 rounded-md cursor-pointer">
                         View class
                     </button>
 
                 </div>
-                <span className=" flex items-center text-(--text-secondary) font-medium text-sm border-(--accent)/10 px-4 py-2 bg-(--accent)/10 border rounded-full">
-                    Made by SDSU students, for SDSU students
-                </span>
             </div>
         </div>
     )
