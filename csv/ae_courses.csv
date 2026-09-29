@@ -1,0 +1,56 @@
+prefix,code,full_code,course_name
+A E,123,A E 123,The Aerospace Engineer
+A E,200,A E 200,Statics
+A E,220,A E 220,Dynamics
+A E,260,A E 260,Programming and Numerical Methods in Aerospace
+A E,280,A E 280,Methods of Analysis
+A E,296,A E 296,Experimental Topics
+A E,301,A E 301,Low Speed Aerodynamics
+A E,302,A E 302,High Speed Aerodynamics
+A E,303,A E 303,Experimental Aerodynamics
+A E,310,A E 310,Aerospace Structural Mechanics and Materials
+A E,320,A E 320,Astrodynamics
+A E,331,A E 331,Feedback Flight Control
+A E,340,A E 340,Fluid Mechanics
+A E,341,A E 341,Fluid Mechanics Laboratory
+A E,403W,A E 403W,Aerospace Engineering Senior Project
+A E,410,A E 410,Aerospace Structural Dynamics
+A E,430,A E 430,Aircraft Propulsion Systems
+A E,440,A E 440,Aircraft Stability and Control I
+A E,460A,A E 460A,Aerospace Engineering Applications
+A E,460B,A E 460B,Aerospace Engineering Applications
+A E,496,A E 496,Advanced Aerospace Engineering Topics
+A E,499,A E 499,Special Study
+A E,510,A E 510,Finite Element Methods in Aerospace Structures
+A E,515,A E 515,Methods of Analysis
+A E,520,A E 520,Spacecraft Attitude Dynamics and Control
+A E,530,A E 530,Rocket and Space Propulsion
+A E,535,A E 535,Mechanics of Composite Structures
+A E,540,A E 540,Aircraft Stability and Control II
+A E,546,A E 546,Aerospace Guidance and Navigation
+A E,550,A E 550,Viscous Flow
+A E,596,A E 596,Advanced Aerospace Engineering Topics
+A E,600,A E 600,Seminar
+A E,601,A E 601,Computational Fluid Mechanics
+A E,611,A E 611,Vibration of Elastic Solids
+A E,612,A E 612,Compressible Fluid Flow
+A E,613,A E 613,Hypersonic Aerodynamics
+A E,620,A E 620,Incompressible Aerodynamics
+A E,621,A E 621,Theory of Elasticity
+A E,629,A E 629,Trajectory Design in Cislunar Space
+A E,631,A E 631,Analysis of Elastic Plates
+A E,641,A E 641,Structural Optimization
+A E,644,A E 644,Turbulent Flow
+A E,651,A E 651,Theory of Elastic Stability
+A E,661,A E 661,Introduction to Static and Dynamic Aeroelasticity
+A E,666,A E 666,Inverse Methods and Aerodynamic Applications
+A E,670,A E 670,Optimal Control
+A E,671,A E 671,Non Destructive Evaluation: Theory and Application
+A E,676,A E 676,Advanced Astrodynamics
+A E,678,A E 678,State-Space Flight Control
+A E,696,A E 696,Advanced Topics in Aerospace Engineering
+A E,797,A E 797,Research
+A E,798,A E 798,Special Study
+A E,799A,A E 799A,Thesis or Project
+A E,799B,A E 799B,Thesis or Project Extension
+A E,799C,A E 799C,Comprehensive Examination Extension
