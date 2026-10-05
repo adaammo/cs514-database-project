@@ -9,7 +9,7 @@ python -m playwright install firefox
 windows 11
 execution: 
 
-cd ./cs514-database-project\api\scrappers\sdsu_scraper
+cd .\cs514-database-project\api\scrappers\sdsu_scraper
 python -m scrapy crawl sdsu_classes -O output\classes.jsonl -L INFO
 
 your urls will be saved to here 
