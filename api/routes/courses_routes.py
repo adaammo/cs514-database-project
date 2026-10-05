@@ -18,27 +18,27 @@ async def get_all_courses(
 # NEEDS IMPLEMENTATION
 @router.get("/{course_id}", response_model=CourseDetailResponse)
 async def get_course_information(
-    course_id: str,
-    supabase = Depends(get_supabase_public)
+    course_id: str, 
+    supabase = Depends(get_supabase_public) 
 ):
-    service = CourseService(supabase=supabase)
-    return await service.read_single_course(course_id)
+    service = CourseService(supabase=supabase) 
+    return await service.read_single_course(course_id) 
 
 # Issue #5 on github
 @router.get("/{course_id}/reviews")
 async def get_course_reviews(
     course_id: UUID,
-    limit: Annotated[int, Query(ge=1, le=100)] = 20,
-    offset: Annotated[int, Query(ge=0)] = 0,
+    limit: Annotated[int, Query(ge=1, le=100)] = 20, 
+    offset: Annotated[int, Query(ge=0)] = 0, 
     supabase = Depends(get_supabase_public)
 ):
     pass
 
-# Needs an implementation where the payload is inserted to the database
-@router.post("/{course_id}/reviews/create")
-async def create_course_review(
-    course_id: UUID,
-    review: ReviewCreate,
-    supabase = Depends(get_supabase_public),
+@router.post("/{course_id}/reviews/create") # route to create a review for the course
+async def create_course_review( # asyncronous function to create a review for the course
+    course_id: UUID, # course_id is the id of the course that is being requested
+    review: ReviewCreate, # review is the incoming review data (ReviewCreate payload)
+    supabase = Depends(get_supabase_public), # database client injected by FASTAPI
 ):
-    pass
+    service = CourseService(supabase=supabase) # build service with the DB client
+    return await service.create_course_review(course_id, review) # call service method that inserts into the reviews table

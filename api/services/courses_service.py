@@ -1,12 +1,17 @@
 from uuid import UUID
 from supabase import Client
 from schemas.courses_schemas import CourseBase, CourseDetailResponse
-from schemas.reviews_schema import ReviewBase
+from schemas.reviews_schema import ReviewBase, ReviewCreate
 from fastapi import HTTPException, status
+
+
 class CourseService:
+
+
     def __init__(self, supabase: Client):
         self.supabase = supabase
         
+
     async def read_courses_database(self) -> dict[str, list[CourseBase]] : 
         # call the courses table, select all the data and execute the query
         try:
@@ -23,7 +28,8 @@ class CourseService:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail = "Something happened internally."
             )
-   
+            
+
     async def read_single_course(self, course_id: str) -> CourseDetailResponse : 
         # call the courses table, select all the data and execute the query
         try:
@@ -71,3 +77,31 @@ class CourseService:
                 detail = "Something happened internally."
             )
    
+   
+    # function to create a review for the course
+    async def create_course_review(self, course_id: UUID, review: ReviewCreate):
+
+        try:
+            # create a row object using review attributes to insert into the reviews table
+            row = {
+            "course_id": str(course_id),
+            "rating": review.rating,
+            "difficulty": review.difficulty,
+            "professor": review.professor,
+            "title": review.title,
+            "body": review.body,
+            "grade": review.grade
+            }
+
+            # insert the new row into the reviews table
+            insert_result = (self.supabase.table("reviews").insert(row).execute())
+
+            # return the newly inserted row
+            return insert_result.data[0] 
+
+        # if insert fails, raise an HTTP 500 error
+        except Exception:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Something happened internally."
+            )
