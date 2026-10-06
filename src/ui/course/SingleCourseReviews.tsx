@@ -1,7 +1,7 @@
-import { ReviewBase } from "@/src/lib/types";
+import { ProfessorStatsResponse, ReviewBase } from "@/src/lib/types";
 import { Star } from "lucide-react";
 
-export default function SingleCourseReviews({reviews} : {reviews: ReviewBase[]}){
+export default function SingleCourseReviews({reviews, stats} : {reviews: ReviewBase[], stats: ProfessorStatsResponse[]}){
     return (
         <section className="grid grid-cols-[1fr_400px] flex-1 gap-3">
         <div className="flex flex-col gap-2 rounded-md">
@@ -93,38 +93,7 @@ export default function SingleCourseReviews({reviews} : {reviews: ReviewBase[]})
             </div>
 
             <div className="flex flex-col h-full justify-between gap-3">
-                {[
-                    {
-                        professor: "Hau Nguyen",
-                        average_rating: 5.0,
-                        average_difficulty: 5.0,
-                        review_count: 8,
-                    },
-                    {
-                        professor: "Jane Smith",
-                        average_rating: 4.6,
-                        average_difficulty: 6.2,
-                        review_count: 12,
-                    },
-                    {
-                        professor: "Michael Chen",
-                        average_rating: 4.3,
-                        average_difficulty: 4.8,
-                        review_count: 8,
-                    },
-                    {
-                        professor: "Sarah Kim",
-                        average_rating: 4.1,
-                        average_difficulty: 7.3,
-                        review_count: 6,
-                    },
-                    {
-                        professor: "David Lee",
-                        average_rating: 3.8,
-                        average_difficulty: 6.9,
-                        review_count: 4,
-                    },
-                ].map((professor) => (
+                {stats.map((professor) => (
                     <div
                         key={professor.professor}
                         className="flex flex-col gap-3 rounded-xl border border-(--border) bg-(--bg-secondary) p-4 transition-all duration-200 hover:border-(--border-strong)"

@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react";
-import { APICourseResponse } from "../lib/types";
+import { APICourseResponse, ProfessorStatsResponse } from "../lib/types";
 import { departmentNames } from "../lib/constants";
 import { AnimatePresence, easeInOut, motion } from "motion/react";
 import ReviewForm from "../ui/ReviewForm";
@@ -8,7 +8,7 @@ import SingleCourseHeader from "../ui/course/SingleCourseHeader";
 import SingleCourseItems from "../ui/course/SingleCourseItems";
 import SingleCourseReviews from "../ui/course/SingleCourseReviews";
 
-export default function CourseDetails({ info }: { info: APICourseResponse }) {
+export default function CourseDetails({ info, stats }: { info: APICourseResponse, stats: ProfessorStatsResponse[] }) {
     const { course, reviews, review_count, average_rating, average_difficulty, } = info;
     const department = departmentNames[course.prefix];
     const [reviewModalOpen, setReviewModalOpen] = useState(false);
@@ -16,7 +16,7 @@ export default function CourseDetails({ info }: { info: APICourseResponse }) {
         <div className="mx-auto flex min-h-screen w-full flex-col gap-6 px-6 py-5">
             <SingleCourseHeader department={department} course={course} onOpen={setReviewModalOpen} />
             <SingleCourseItems rating={average_rating} difficulty={average_difficulty} count={review_count} />
-            <SingleCourseReviews reviews={reviews} />
+            <SingleCourseReviews reviews={reviews} stats = {stats}/>
             <AnimatePresence>
                 {reviewModalOpen && (
                     <motion.div

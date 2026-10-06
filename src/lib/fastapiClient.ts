@@ -1,6 +1,6 @@
 "use server"
 import axios, { isAxiosError } from "axios"
-import { APICourseResponse, APIErrorResponse, CoursesResponse, ReviewBase, ReviewInserts } from "./types"
+import { APICourseResponse, APIErrorResponse, CoursesResponse, ProfessorStatsResponse, ReviewBase, ReviewInserts } from "./types"
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? ""
 const headers = {
     "content-type": "application/json",
@@ -17,7 +17,7 @@ export async function CallCoursesAPI(): Promise<{ ok: true, courses: CoursesResp
         }
     }
     catch (error) {
-        if (isAxiosError<{detail: string}>(error)) {
+        if (isAxiosError<{ detail: string }>(error)) {
             const status = error.response?.status
             const detail = error.response?.data.detail
             return {
@@ -47,7 +47,7 @@ export async function CallSingleCourseAPI(course_id: string):
         }
     }
     catch (error) {
-        if (isAxiosError<{detail: string}>(error)) {
+        if (isAxiosError<{ detail: string }>(error)) {
             const status = error.response?.status
             const detail = error.response?.data.detail
             return {
@@ -64,22 +64,52 @@ export async function CallSingleCourseAPI(course_id: string):
     }
 }
 
-export async function PostReviewForm(review: ReviewInserts, course_id: string) : Promise<{ok: true} | {ok: false, status: number, detail: string}>{
-    try{
+export async function PostReviewForm(review: ReviewInserts, course_id: string): Promise<{ ok: true } | { ok: false, status: number, detail: string }> {
+    try {
         console.log(review);
-        await axios.post(`${API_URL}/courses/${course_id}/reviews/create`,review, {
+        await axios.post(`${API_URL}/courses/${course_id}/reviews/create`, review, {
             headers
         })
-        return {ok: true};
+        return { ok: true };
     }
     catch (error) {
-        if (isAxiosError<{detail: string}>(error)) {
+        if (isAxiosError<{ detail: string }>(error)) {
             const status = error.response?.status
             const detail = error.response?.data.detail
             return {
                 ok: false,
                 status: status ?? 500,
                 detail: JSON.stringify(detail) ?? "Interal service error."
+            }
+        }
+    }
+    return {
+        ok: false,
+        status: 500,
+        detail: "Something went wrong with our server. Please try again."
+    }
+}
+
+export async function CallProfessorStatsAPI(course_id: string):
+    Promise<{ ok: true , stats: ProfessorStatsResponse[]} | { ok: false, status: number, detail: string }> {
+    try {
+        const response = await axios.get<ProfessorStatsResponse[]>(`${API_URL}/reviews/${course_id}/professors`, {
+            headers
+        })
+        const data = response.data
+        return {
+            ok: true,
+            stats: data
+        }
+    }
+    catch (error) {
+        if (isAxiosError<{ detail: string }>(error)) {
+            const status = error.response?.status
+            const detail = error.response?.data.detail
+            return {
+                ok: false,
+                status: status ?? 500,
+                detail: detail ?? "Interal service error."
             }
         }
     }

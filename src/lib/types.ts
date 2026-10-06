@@ -54,3 +54,9 @@ export type ReviewFormProps = {
   courseName: string;
   onClose: React.Dispatch<SetStateAction<boolean>>
 };
+export type ProfessorStatsResponse = {
+  professor: string,
+  average_rating: number,
+  average_difficulty: number,
+  review_count: number
+}
