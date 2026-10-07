@@ -9,5 +9,8 @@ authors = [
 requires-python = ">=3.14"
 dependencies = [
     "fastapi[standard]",
+    "playwright>=1.63.0",
+    "scrapy>=2.19.0",
+    "scrapy-playwright>=0.0.48",
     "supabase>=2.31.0",
 ]

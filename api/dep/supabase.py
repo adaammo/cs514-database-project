@@ -3,6 +3,8 @@ from fastapi import HTTPException, Header, status
 from dotenv import load_dotenv
 import os
 
+from schemas.user_schema import UserModel
+
 load_dotenv("dev.env")
 
 url: str = os.getenv("SUPABASE_URL")
