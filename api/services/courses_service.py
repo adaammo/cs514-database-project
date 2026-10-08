@@ -1,6 +1,10 @@
 from uuid import UUID
 from supabase import Client
-from schemas.courses_schemas import CourseBase, CourseDetailResponse
+from schemas.courses_schemas import (
+    CourseBase,
+    CourseDetailResponse,
+    CourseCatalogResponse,
+)
 from schemas.reviews_schema import ReviewBase, ReviewCreate
 from fastapi import HTTPException, status
 
@@ -10,12 +14,12 @@ class CourseService:
 
     def __init__(self, supabase: Client):
         self.supabase = supabase
-        
 
-    async def read_courses_database(self) -> dict[str, list[CourseBase]] : 
+
+    async def read_courses_database(self) -> dict[str, list[CourseBase]] :
         # call the courses table, select all the data and execute the query
         try:
-            query = self.supabase.table("courses").select("*")      
+            query = self.supabase.table("courses").select("*")
             result = query.execute()
             courses_grouped : dict[str, list[CourseBase]] = {}
             for course in result.data:
@@ -28,9 +32,98 @@ class CourseService:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail = "Something happened internally."
             )
-            
+    async def read_course_catalog(
+    self,
+    course_prefix: str
+) -> list[CourseCatalogResponse]:
+        try:
+            normalized_prefix = course_prefix.strip().upper()
 
-    async def read_single_course(self, course_id: str) -> CourseDetailResponse : 
+            course_result = (
+                self.supabase
+                .table("courses")
+                .select("*")
+                .eq("prefix", normalized_prefix)
+                .execute()
+            )
+
+            courses = course_result.data or []
+
+            if not courses:
+                return []
+
+            course_ids = [course["id"] for course in courses]
+
+            reviews_result = (
+                self.supabase
+                .table("reviews")
+                .select("course_id,rating,difficulty")
+                .in_("course_id", course_ids)
+                .execute()
+            )
+
+            reviews = reviews_result.data or []
+
+            stats_by_course = {}
+
+            for course in courses:
+                course_id = str(course["id"])
+                stats_by_course[course_id] = {
+                    "review_count": 0,
+                    "rating_total": 0.0,
+                    "difficulty_total": 0.0,
+                }
+
+            for review in reviews:
+                course_id = str(review["course_id"])
+
+                if course_id in stats_by_course:
+                    stats_by_course[course_id]["review_count"] += 1
+                    stats_by_course[course_id]["rating_total"] += float(
+                        review["rating"]
+                    )
+                    stats_by_course[course_id]["difficulty_total"] += float(
+                        review["difficulty"]
+                    )
+
+            catalog_courses = []
+
+            for course in courses:
+                course_id = str(course["id"])
+                stats = stats_by_course[course_id]
+                review_count = stats["review_count"]
+
+                if review_count > 0:
+                    average_rating = round(
+                        stats["rating_total"] / review_count,
+                        2
+                    )
+                    average_difficulty = round(
+                        stats["difficulty_total"] / review_count,
+                        2
+                    )
+                else:
+                    average_rating = None
+                    average_difficulty = None
+
+                catalog_courses.append(
+                    CourseCatalogResponse(
+                        **course,
+                        review_count=review_count,
+                        average_rating=average_rating,
+                        average_difficulty=average_difficulty,
+                    )
+                )
+
+            return catalog_courses
+
+        except Exception:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Something happened internally."
+            )
+
+    async def read_single_course(self, course_id: str) -> CourseDetailResponse :
         # call the courses table, select all the data and execute the query
         try:
             course_result = (
@@ -61,7 +154,7 @@ class CourseService:
             if num_of_reviews != 0 :
                 average_rating = (sum(r.rating for r in reviews)) / num_of_reviews
                 average_difficulty = (sum(r.difficulty for r in reviews)) / num_of_reviews
-                
+
             return CourseDetailResponse(
                 course=course,
                 reviews=reviews,
@@ -76,8 +169,8 @@ class CourseService:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail = "Something happened internally."
             )
-   
-   
+
+
     # function to create a review for the course
     async def create_course_review(self, course_id: UUID, review: ReviewCreate):
 
@@ -97,7 +190,7 @@ class CourseService:
             insert_result = (self.supabase.table("reviews").insert(row).execute())
 
             # return the newly inserted row
-            return insert_result.data[0] 
+            return insert_result.data[0]
 
         # if insert fails, raise an HTTP 500 error
         except Exception:
