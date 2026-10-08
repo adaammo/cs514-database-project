@@ -25,6 +25,12 @@ class CourseDetailResponse(BaseModel):
     review_count: int
     average_rating: float
     average_difficulty: float
+
+class CourseCatalogResponse(CourseBase):
+    review_count: int
+    average_rating: float | None = None
+    average_difficulty: float | None = None
+
 class CourseReview(BaseModel):
     id: str
     rating: int
