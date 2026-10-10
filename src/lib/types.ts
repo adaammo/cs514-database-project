@@ -9,6 +9,12 @@ export type CourseDatabase = {
     course_name: string;
   };
 
+export type CourseCatalogResponse = CourseDatabase & {
+    review_count: number;
+    average_rating: number | null;
+    average_difficulty: number | null;
+};
+
 export type ReviewBase = {
     id: string; 
     course_id: string;

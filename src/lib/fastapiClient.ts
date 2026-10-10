@@ -1,6 +1,6 @@
 "use server"
 import axios, { isAxiosError } from "axios"
-import { APICourseResponse, APIErrorResponse, CoursesResponse, ProfessorStatsResponse, ReviewBase, ReviewInserts } from "./types"
+import { APICourseResponse, APIErrorResponse, CoursesResponse, ProfessorStatsResponse, ReviewBase, ReviewInserts, CourseCatalogResponse } from "./types"
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? ""
 const headers = {
     "content-type": "application/json",
@@ -27,6 +27,41 @@ export async function CallCoursesAPI(): Promise<{ ok: true, courses: CoursesResp
             }
         }
     }
+    return {
+        ok: false,
+        status: 500,
+        detail: "Something went wrong with our server. Please try again."
+    }
+}
+
+export async function CallCourseCatalogAPI(course_prefix: string):
+    Promise<{ ok: true, courses: CourseCatalogResponse[] } | { ok: false, status: number, detail: string }> {
+    try {
+        const response = await axios.get<CourseCatalogResponse[]>(
+            `${API_URL}/courses/prefix/${encodeURIComponent(course_prefix)}`,
+            {
+                headers
+            }
+        );
+
+        return {
+            ok: true,
+            courses: response.data
+        }
+    }
+    catch (error) {
+        if (isAxiosError<{ detail: string }>(error)) {
+            const status = error.response?.status
+            const detail = error.response?.data.detail
+
+            return {
+                ok: false,
+                status: status ?? 500,
+                detail: detail ?? "Internal service error."
+            }
+        }
+    }
+
     return {
         ok: false,
         status: 500,
