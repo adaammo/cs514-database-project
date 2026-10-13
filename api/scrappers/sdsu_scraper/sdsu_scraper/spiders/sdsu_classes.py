@@ -36,7 +36,41 @@ async def perform_search(page):
         "Available Subjects Dropdown",
         exact=True,
     )
-    await subject_dropdown.select_option("CS")
+    await subject_dropdown.select_option("CS") #change to the desired course
+
+# Current available course codes
+# A E 	A S 	AAS 	ACCTG 
+# AFRAS 	AMIND 	ANTH 	ARAB 
+# ARP 	ART 	ASIAN 	ASL 
+# ASTR 	AUD 	B A 	BDA 
+# BIOL 	BIOMI 	BQS 	BRAZ 
+# C P 	CAL 	CCS 	CFD 
+# CHEM 	CHIN 	CINTS 	CIV E 
+# CJ 	CLASS 	COMM 	COMP 
+# COMPE 	CON E 	CON M 	CS 
+# CSP 	CY 	DANCE 	DLE 
+# DPT 	E E 	ECL 	ECON 
+# ED 	EDL 	ENGR 	ENS 
+# ENV E 	ENV S 	EUROP 	FILIP 
+# FIN 	FN 	FRENC 	GEN S 
+# GEOG 	GEOL 	GERMN 	GERO 
+# H SEC 	HEBRW 	HHS 	HIST 
+# HONOR 	HTM 	HUM 	I B 
+# INT S 	ISCOR 	ITAL 	JAPAN 
+# JMS 	JS 	KOR 	LATAM 
+# LCS 	LDT 	LEAD 	LGBT 
+# LIB S 	LING 	M BIO 	M E 
+# M S E 	MALAS 	MATH 	MGT 
+# MIL S 	MIS 	MKTG 	MTHED 
+# MUSIC 	N SCI 	NAV S 	NURS 
+# OCEAN 	P A 	P H 	PERS 
+# PHIL 	PHYS 	POL S 	PORT 
+# PSFA 	PSY 	PUB 	R A 
+# REL S 	RTM 	RUSSN 	RWS 
+# SCI 	SEG 	SLHS 	SOC 
+# SOCSI 	SPAN 	SPED 	STAT 
+# STS 	SUSTN 	SWORK 	TE 
+# TFM 	THEA 	WGSS 
 
     search_button = advanced_frame.locator(
         '[id="SSR_CLSRCH_FLDS_SSR_SEARCH_PB_1$0"]'
