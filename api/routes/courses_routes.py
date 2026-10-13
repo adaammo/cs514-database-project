@@ -3,17 +3,32 @@ from fastapi import APIRouter, Depends, Query
 from typing import Annotated
 from schemas.reviews_schema import ReviewCreate
 from services.courses_service import CourseService
-from schemas.courses_schemas import CourseBase, CourseDetailResponse
+from schemas.courses_schemas import (
+    CourseBase,
+    CourseDetailResponse,
+    CourseCatalogResponse,
+)
 from dep.supabase import get_supabase_public
 router = APIRouter(prefix="/courses")
 
 @router.get("/", response_model=dict[str, list[CourseBase]])
 async def get_all_courses(
-    supabase = Depends(get_supabase_public)
+    supabase=Depends(get_supabase_public)
 ):
     service = CourseService(supabase=supabase)
     return await service.read_courses_database()
 
+
+@router.get(
+    "/prefix/{course_prefix}",
+    response_model=list[CourseCatalogResponse]
+)
+async def get_courses_by_prefix(
+    course_prefix: str,
+    supabase=Depends(get_supabase_public)
+):
+    service = CourseService(supabase=supabase)
+    return await service.read_course_catalog(course_prefix)
 
 # NEEDS IMPLEMENTATION
 @router.get("/{course_id}", response_model=CourseDetailResponse)
