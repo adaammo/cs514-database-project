@@ -1,4 +1,4 @@
-## CS514 Database Project - Rate My Class
+## CS514 Database Project - Rate My Course
 
 techstack being determined
 
